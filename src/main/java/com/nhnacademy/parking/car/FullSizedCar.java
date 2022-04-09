@@ -1,10 +1,10 @@
 package com.nhnacademy.parking.car;
 
-import java.math.BigDecimal;
+import com.nhnacademy.parking.User;
 import java.time.LocalDateTime;
 
 public class FullSizedCar extends Car {
-    public FullSizedCar(Long number, BigDecimal money, LocalDateTime enterTime) {
-        super(number, money, enterTime);
+    public FullSizedCar(User user, Long number, LocalDateTime enterTime) {
+        super(user, number, enterTime);
     }
 }

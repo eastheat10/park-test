@@ -1,9 +1,12 @@
 package com.nhnacademy.parking;
 
 import com.nhnacademy.parking.car.Car;
+import com.nhnacademy.parking.car.FullSizedCar;
 import com.nhnacademy.parking.exception.CapacityOverflowException;
+import com.nhnacademy.parking.exception.CarSizeOverException;
 import com.nhnacademy.parking.exception.NonExistentCarException;
 import com.nhnacademy.parking.policy.FeePolicy;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -15,11 +18,13 @@ public class ParkingSystem {
 
     private final static int MAX_PARKING_AREA = 10;
 
+    private final PaycoServer server;
     private final FeePolicy feePolicy;
     private final Map<Integer, Car> parkingLot;
     private final Set<Integer> areaNumber;
 
     public ParkingSystem(FeePolicy feePolicy) {
+        server = new PaycoServer();
         this.feePolicy = feePolicy;
         parkingLot = new HashMap<>();
         areaNumber = new HashSet<>();
@@ -33,6 +38,11 @@ public class ParkingSystem {
         if (MAX_PARKING_AREA <= parkingLot.size()) {
             throw new CapacityOverflowException();
         }
+
+        if (car instanceof FullSizedCar) {
+            throw new CarSizeOverException();
+        }
+
         Integer number = areaNumber.stream()
                                    .findFirst()
                                    .orElseThrow(CapacityOverflowException::new);
@@ -45,7 +55,14 @@ public class ParkingSystem {
         Integer findAreaNumber = findAreaByNumber(number);
         Car parkedCar = parkingLot.get(findAreaNumber);
         areaNumber.add(findAreaNumber);
-        parkedCar.pay(feePolicy.calculateFee(parkedCar.getEnterTime(), LocalDateTime.now()));
+        BigDecimal fee =
+            feePolicy.calculateFee(parkedCar.getEnterTime(), LocalDateTime.now());
+
+        if (server.isExist(parkedCar.getUserId())) {
+            fee = fee.multiply(BigDecimal.valueOf(0.9));
+        }
+
+        parkedCar.pay(fee);
         return parkedCar;
     }
 
@@ -56,5 +73,10 @@ public class ParkingSystem {
                          .findFirst()
                          .orElseThrow(() -> new NonExistentCarException(carNumber));
     }
+
+    public User addUserToServer(User user) {
+        return server.join(user);
+    }
+
 
 }

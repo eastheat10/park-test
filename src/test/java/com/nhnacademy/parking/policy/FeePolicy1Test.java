@@ -44,7 +44,7 @@ class FeePolicy1Test {
         assertThat(policy.calculateFee(enterTime, exitTime)).isEqualTo(BigDecimal.valueOf(3_000));
     }
 
-    @DisplayName("6시간 주차시 주차요금 10000원")
+    @DisplayName("6시간 주차시 주차요금 10,000원")
     @Test
     void parking_6h() {
         LocalDateTime enterTime = LocalDateTime.of(2022, 4, 6, 12, 0, 0);

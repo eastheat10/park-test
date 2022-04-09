@@ -2,19 +2,22 @@ package com.nhnacademy.parking;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import com.nhnacademy.parking.car.Car;
-import com.nhnacademy.parking.exception.CapacityOverflowException;
 import com.nhnacademy.parking.exception.InsufficientCashException;
+import com.nhnacademy.parking.policy.FeePolicy;
 import com.nhnacademy.parking.policy.FeePolicy1;
 import java.math.BigDecimal;
+import java.security.Policy;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class ParkingSystemTest {
+class PayTest {
 
     ParkingSystem ps;
     Car car;
@@ -25,25 +28,6 @@ class ParkingSystemTest {
         car = mock(Car.class);
     }
 
-    @DisplayName("차가 들어오면 주차")
-    @Test
-    void park() {
-
-        assertThat(ps.park(car)).isNotNull();
-    }
-
-    @DisplayName("자리가 없어 주차 실패")
-    @Test
-    void park_fail() {
-
-        for (int i = 0; i < 10; i++) {
-            ps.park(car);
-        }
-
-        assertThatThrownBy(() -> ps.park(car))
-            .isInstanceOf(CapacityOverflowException.class);
-    }
-
     @DisplayName("차가 나가면 결제 - 30분 주차, 차주 1,000원 소지")
     @Test
     void payWhenExit30m() {
@@ -52,7 +36,9 @@ class ParkingSystemTest {
         BigDecimal money = BigDecimal.valueOf(1_000);
         LocalDateTime before30m = LocalDateTime.now().minusMinutes(30);
 
-        Car parkingCar = new Car(carNumber, money, before30m);
+        User user = new User(carNumber, money);
+
+        Car parkingCar = new Car(user, carNumber, before30m);
         ps.park(parkingCar);
 
         assertThat(ps.exit(carNumber)).isEqualTo(parkingCar);
@@ -62,11 +48,14 @@ class ParkingSystemTest {
     @Test
     void payWhenExit30m_fail() {
 
+
         Long carNumber = 1234L;
         BigDecimal money = BigDecimal.valueOf(999);
         LocalDateTime before30m = LocalDateTime.now().minusMinutes(30);
 
-        Car parkingCar = new Car(carNumber, money, before30m);
+        User user = new User(carNumber, money);
+
+        Car parkingCar = new Car(user, carNumber, before30m);
         ps.park(parkingCar);
 
         assertThatThrownBy(() -> ps.exit(carNumber))
@@ -81,7 +70,9 @@ class ParkingSystemTest {
         BigDecimal money = BigDecimal.valueOf(1_500);
         LocalDateTime before31m = LocalDateTime.now().minusMinutes(31);
 
-        Car parkingCar = new Car(carNumber, money, before31m);
+        User user = new User(carNumber, money);
+
+        Car parkingCar = new Car(user, carNumber, before31m);
         ps.park(parkingCar);
 
         assertThat(ps.exit(carNumber)).isEqualTo(parkingCar);
@@ -95,7 +86,9 @@ class ParkingSystemTest {
         BigDecimal money = BigDecimal.valueOf(1_499);
         LocalDateTime before31m = LocalDateTime.now().minusMinutes(31);
 
-        Car parkingCar = new Car(carNumber, money, before31m);
+        User user = new User(carNumber, money);
+
+        Car parkingCar = new Car(user, carNumber, before31m);
         ps.park(parkingCar);
 
         assertThatThrownBy(() -> ps.exit(carNumber))
@@ -110,7 +103,9 @@ class ParkingSystemTest {
         BigDecimal money = BigDecimal.valueOf(3_000);
         LocalDateTime before61m = LocalDateTime.now().minusMinutes(61);
 
-        Car parkingCar = new Car(carNumber, money, before61m);
+        User user = new User(carNumber, money);
+
+        Car parkingCar = new Car(user, carNumber, before61m);
         ps.park(parkingCar);
 
         assertThat(ps.exit(carNumber)).isEqualTo(parkingCar);
@@ -124,7 +119,9 @@ class ParkingSystemTest {
         BigDecimal money = BigDecimal.valueOf(2_999);
         LocalDateTime before61m = LocalDateTime.now().minusMinutes(61);
 
-        Car parkingCar = new Car(carNumber, money, before61m);
+        User user = new User(carNumber, money);
+
+        Car parkingCar = new Car(user, carNumber, before61m);
         ps.park(parkingCar);
 
         assertThatThrownBy(() -> ps.exit(carNumber))
@@ -139,7 +136,9 @@ class ParkingSystemTest {
         BigDecimal money = BigDecimal.valueOf(10_000);
         LocalDateTime before6h = LocalDateTime.now().minusHours(6);
 
-        Car parkingCar = new Car(carNumber, money, before6h);
+        User user = new User(carNumber, money);
+
+        Car parkingCar = new Car(user, carNumber, before6h);
         ps.park(parkingCar);
 
         assertThat(ps.exit(carNumber)).isEqualTo(parkingCar);
@@ -153,11 +152,37 @@ class ParkingSystemTest {
         BigDecimal money = BigDecimal.valueOf(9_999);
         LocalDateTime before6h = LocalDateTime.now().minusHours(6);
 
-        Car parkingCar = new Car(carNumber, money, before6h);
+        User user = new User(carNumber, money);
+
+        Car parkingCar = new Car(user, carNumber, before6h);
         ps.park(parkingCar);
 
         assertThatThrownBy(() -> ps.exit(carNumber))
             .isInstanceOf(InsufficientCashException.class);
+    }
+
+    @DisplayName("PAY 회원이면 10% 할인")
+    @Test
+    void paycoMemberDiscount() {
+
+        Long id = 1111L;
+        BigDecimal money = BigDecimal.valueOf(100_000);
+        LocalDateTime enterTime = LocalDateTime.now().minusMinutes(10);
+
+        User user = new User(id, money);
+        ps.addUserToServer(user);
+
+        FeePolicy policy = new FeePolicy1();
+
+        BigDecimal fee = policy.calculateFee(enterTime, LocalDateTime.now());
+        BigDecimal expectFee = fee.multiply(BigDecimal.valueOf(0.9));
+
+        Car car = new Car(user, id, LocalDateTime.now().minusMinutes(10));
+
+        ps.park(car);
+        ps.exit(id);
+
+        assertThat(car.getMoney()).isEqualTo(money.subtract(expectFee));
     }
 
 }

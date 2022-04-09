@@ -7,9 +7,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-public class FeePolicy1 implements FeePolicy {
+public class FeePolicy2 implements FeePolicy {
 
-    private final static long MAX_FEE_OF_DAY = 10_000L;
+    private final static long MAX_FEE_OF_DAY = 15_000L;
     private final static long MINUTE_OF_DAY = 1440L;
     private final static long ADDITIONAL_FEE_PER_10MIN = 500L;
 
@@ -18,19 +18,27 @@ public class FeePolicy1 implements FeePolicy {
 
         long betweenMin = MINUTES.between(enterTime, exitTime);
 
-        if (enterTime.getDayOfMonth() == exitTime.getDayOfMonth()) {    // 주차 하루 미만
-            long additionalTime = betweenMin - 30L;
-            long times = additionalTime > 0 ? (additionalTime / 10) + 1 : 0;
-            long totalFee = 1_000L + (ADDITIONAL_FEE_PER_10MIN * times);
-            return BigDecimal.valueOf(Math.min(totalFee, MAX_FEE_OF_DAY));
+        if (enterTime.getDayOfMonth() == exitTime.getDayOfMonth()) {
+            if (betweenMin <= 30) {
+                return BigDecimal.valueOf(0);
+            }
+
+            if (betweenMin <= 60) {
+                return BigDecimal.valueOf(1_000);
+            }
+
+            betweenMin -= 60;
+            long times = betweenMin / 10 + 1;
+            long result = 1_000 + (ADDITIONAL_FEE_PER_10MIN * times);
+            return BigDecimal.valueOf(Math.min(result, MAX_FEE_OF_DAY));
         }
 
         // 주차 시간이 하루가 넘을 시 며칠간 주차 했는지 계산
         betweenMin = MINUTES.between(enterTime.plusDays(1).with(LocalTime.MIN), exitTime);
         long parkingDays = DAYS.between(enterTime, exitTime);
-        long additionalFee = betweenMin % MINUTE_OF_DAY > 200 ? MAX_FEE_OF_DAY
-            : (betweenMin - MINUTE_OF_DAY) / 10 * ADDITIONAL_FEE_PER_10MIN;
+        long additionalFee = betweenMin % MINUTE_OF_DAY > 200 ? MAX_FEE_OF_DAY  :  (betweenMin - MINUTE_OF_DAY) / 10 * ADDITIONAL_FEE_PER_10MIN;
 
         return BigDecimal.valueOf((parkingDays * MAX_FEE_OF_DAY) + additionalFee);
     }
+
 }

@@ -1,5 +1,6 @@
 package com.nhnacademy.parking.car;
 
+import com.nhnacademy.parking.User;
 import com.nhnacademy.parking.exception.InsufficientCashException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -10,25 +11,30 @@ public class Car {
         return number;
     }
 
+    protected final User user;
+
     private final Long number;
-    private final BigDecimal money;
     private final LocalDateTime enterTime;
 
-    public Car(Long number, BigDecimal money, LocalDateTime enterTime) {
+    public Car(User user, Long number, LocalDateTime enterTime) {
+        this.user = user;
         this.number = number;
-        this.money = money;
         this.enterTime = enterTime;
     }
 
     public void pay(BigDecimal fee) {
-        if (this.money.compareTo(fee) < 0) {
-            throw new InsufficientCashException();
-        }
-        money.subtract(fee);
+        user.pay(fee);
     }
 
     public LocalDateTime getEnterTime() {
         return this.enterTime;
     }
 
+    public BigDecimal getMoney() {
+        return user.getMoney();
+    }
+
+    public Long getUserId() {
+        return user.getId();
+    }
 }
