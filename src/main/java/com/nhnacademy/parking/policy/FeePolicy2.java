@@ -3,9 +3,11 @@ package com.nhnacademy.parking.policy;
 import static java.time.temporal.ChronoUnit.DAYS;
 import static java.time.temporal.ChronoUnit.MINUTES;
 
+import com.nhnacademy.parking.Voucher;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Optional;
 
 public class FeePolicy2 implements FeePolicy {
 
@@ -14,11 +16,13 @@ public class FeePolicy2 implements FeePolicy {
     private final static long ADDITIONAL_FEE_PER_10MIN = 500L;
 
     @Override
-    public BigDecimal calculateFee(LocalDateTime enterTime, LocalDateTime exitTime) {
+    public BigDecimal calculateFee(LocalDateTime enterTime, LocalDateTime exitTime, Optional<Voucher> voucher) {
+
+        exitTime = applyVoucher(voucher.map(Voucher::getDiscountTime).orElse(0L), exitTime);
 
         long betweenMin = MINUTES.between(enterTime, exitTime);
 
-        if (enterTime.getDayOfMonth() == exitTime.getDayOfMonth()) {
+        if (enterTime.getDayOfMonth() >= exitTime.getDayOfMonth()) {
             if (betweenMin <= 30) {
                 return BigDecimal.valueOf(0);
             }
@@ -39,6 +43,10 @@ public class FeePolicy2 implements FeePolicy {
         long additionalFee = betweenMin % MINUTE_OF_DAY > 200 ? MAX_FEE_OF_DAY  :  (betweenMin - MINUTE_OF_DAY) / 10 * ADDITIONAL_FEE_PER_10MIN;
 
         return BigDecimal.valueOf((parkingDays * MAX_FEE_OF_DAY) + additionalFee);
+    }
+
+    private LocalDateTime applyVoucher(long voucher, LocalDateTime exitTime) {
+        return exitTime.minusHours(voucher);
     }
 
 }

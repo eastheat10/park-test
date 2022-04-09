@@ -8,10 +8,8 @@ import com.nhnacademy.parking.car.Car;
 import com.nhnacademy.parking.car.FullSizedCar;
 import com.nhnacademy.parking.exception.CapacityOverflowException;
 import com.nhnacademy.parking.exception.CarSizeOverException;
-import com.nhnacademy.parking.policy.FeePolicy1;
-import java.math.BigDecimal;
+import com.nhnacademy.parking.policy.FeePolicy2;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,7 +21,7 @@ class ParkingTest {
 
     @BeforeEach
     void setUp() {
-        ps = new ParkingSystem(new FeePolicy1());
+        ps = new ParkingSystem(new FeePolicy2());
         car = mock(Car.class);
     }
 

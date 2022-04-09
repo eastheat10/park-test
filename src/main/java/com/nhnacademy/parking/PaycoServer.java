@@ -5,7 +5,7 @@ import java.util.List;
 
 public class PaycoServer {
 
-    private List<User> userList;
+    private final List<User> userList;
 
     public PaycoServer() {
         this.userList = new ArrayList<>();
@@ -14,10 +14,6 @@ public class PaycoServer {
     public User join(User user) {
         userList.add(user);
         return user;
-    }
-
-    public User findById(Long id) {
-        return null;
     }
 
     public boolean isExist(Long id) {

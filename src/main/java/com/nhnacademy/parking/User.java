@@ -7,6 +7,7 @@ public class User {
 
     private final Long id;
     private BigDecimal money;
+    Voucher voucher;
 
     public User(Long id, BigDecimal money) {
         this.id = id;
@@ -29,4 +30,11 @@ public class User {
         return money;
     }
 
+    public Voucher getVoucher() {
+        return voucher;
+    }
+
+    public void takeVoucher(Voucher voucher) {
+        this.voucher = voucher;
+    }
 }

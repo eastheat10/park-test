@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.nhnacademy.parking.User;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -25,7 +24,7 @@ class CarTest {
         Long carNumber = 1234L;
         LocalDateTime enterTime = LocalDateTime.now();
         BigDecimal fee = BigDecimal.valueOf(10_000);
-        BigDecimal discountedFee = fee.divide(BigDecimal.valueOf(2), RoundingMode.HALF_EVEN);
+        BigDecimal discountedFee = fee.multiply(BigDecimal.valueOf(0.5));
 
         Car car = new CompactCar(user, carNumber, enterTime);
         BigDecimal money = car.getMoney();

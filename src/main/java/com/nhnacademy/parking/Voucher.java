@@ -1,6 +1,7 @@
 package com.nhnacademy.parking;
 
 public class Voucher {
+
     private final long discountTime;
 
     public Voucher(long discountTime) {

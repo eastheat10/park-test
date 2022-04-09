@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class CompactCar extends Car {
+
     public CompactCar(User user, Long number, LocalDateTime enterTime) {
         super(user, number, enterTime);
     }

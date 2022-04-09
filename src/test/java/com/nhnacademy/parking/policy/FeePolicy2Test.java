@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,7 +24,7 @@ class FeePolicy2Test {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime before30m = now.minusMinutes(30);
 
-        assertThat(policy.calculateFee(before30m, now)).isEqualTo(BigDecimal.valueOf(0));
+        assertThat(policy.calculateFee(before30m, now, Optional.empty())).isEqualTo(BigDecimal.valueOf(0));
     }
 
     @DisplayName("31분 ~ 60분 1,000원")
@@ -33,8 +34,8 @@ class FeePolicy2Test {
         LocalDateTime before31m = now.minusMinutes(31);
         LocalDateTime before60m = now.minusMinutes(60);
 
-        assertThat(policy.calculateFee(before31m, now)).isEqualTo(BigDecimal.valueOf(1_000));
-        assertThat(policy.calculateFee(before60m, now)).isEqualTo(BigDecimal.valueOf(1_000));
+        assertThat(policy.calculateFee(before31m, now, Optional.empty())).isEqualTo(BigDecimal.valueOf(1_000));
+        assertThat(policy.calculateFee(before60m, now, Optional.empty())).isEqualTo(BigDecimal.valueOf(1_000));
     }
 
     @DisplayName("60분 부터 10분당 500원 추가")
@@ -44,8 +45,8 @@ class FeePolicy2Test {
         LocalDateTime before61m = now.minusMinutes(61);
         LocalDateTime before71m = now.minusMinutes(71);
 
-        assertThat(policy.calculateFee(before61m, now)).isEqualTo(BigDecimal.valueOf(1_500));
-        assertThat(policy.calculateFee(before71m, now)).isEqualTo(BigDecimal.valueOf(2_000));
+        assertThat(policy.calculateFee(before61m, now, Optional.empty())).isEqualTo(BigDecimal.valueOf(1_500));
+        assertThat(policy.calculateFee(before71m, now, Optional.empty())).isEqualTo(BigDecimal.valueOf(2_000));
     }
 
     @DisplayName("하루 최대 요금 15,000원")
@@ -54,7 +55,7 @@ class FeePolicy2Test {
         LocalDateTime enterTime = LocalDateTime.of(2022, 4, 9, 0, 0, 0);
         LocalDateTime exitTime = LocalDateTime.of(2022, 4, 9, 11, 59, 59);
 
-        assertThat(policy.calculateFee(enterTime, exitTime)).isEqualTo(BigDecimal.valueOf(15_000));
+        assertThat(policy.calculateFee(enterTime, exitTime, Optional.empty())).isEqualTo(BigDecimal.valueOf(15_000));
     }
 
     @DisplayName("2일 연속 주차 30,000원")
@@ -63,7 +64,7 @@ class FeePolicy2Test {
         LocalDateTime enterTime = LocalDateTime.of(2022, 4, 9, 0, 0, 0);
         LocalDateTime exitTime = LocalDateTime.of(2022, 4, 10, 23, 59, 59);
 
-        assertThat(policy.calculateFee(enterTime, exitTime)).isEqualTo(BigDecimal.valueOf(30_000));
+        assertThat(policy.calculateFee(enterTime, exitTime, Optional.empty())).isEqualTo(BigDecimal.valueOf(30_000));
     }
 
 }

@@ -1,9 +1,10 @@
 package com.nhnacademy.parking.car;
 
 import com.nhnacademy.parking.User;
-import com.nhnacademy.parking.exception.InsufficientCashException;
+import com.nhnacademy.parking.Voucher;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 public class Car {
 
@@ -36,5 +37,9 @@ public class Car {
 
     public Long getUserId() {
         return user.getId();
+    }
+
+    public Optional<Voucher> getVoucher() {
+        return Optional.ofNullable(user.getVoucher());
     }
 }
