@@ -1,4 +1,4 @@
-package com.nhnacademy.parking;
+package com.nhnacademy.parking.user;
 
 public class Voucher {
 

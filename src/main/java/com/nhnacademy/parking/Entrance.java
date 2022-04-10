@@ -1,6 +1,7 @@
 package com.nhnacademy.parking;
 
 import com.nhnacademy.parking.car.Car;
+import com.nhnacademy.parking.parkingsystem.ParkingSystem;
 
 public class Entrance {
 
@@ -10,11 +11,11 @@ public class Entrance {
         this.parkingSystem = parkingSystem;
     }
 
-    public boolean scan(Car car) {
+    public synchronized boolean scan(Car car) {
         return car.getNumber() != null;
     }
 
-    public Integer park(Car car) {
+    public synchronized Long park(Car car) {
         return parkingSystem.park(car);
     }
 }

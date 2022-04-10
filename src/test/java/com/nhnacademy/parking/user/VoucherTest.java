@@ -1,9 +1,10 @@
-package com.nhnacademy.parking;
+package com.nhnacademy.parking.user;
 
 import static org.assertj.core.api.Assertions.*;
 
 import com.nhnacademy.parking.policy.FeePolicy;
 import com.nhnacademy.parking.policy.FeePolicy2;
+import com.nhnacademy.parking.user.Voucher;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Optional;

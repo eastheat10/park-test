@@ -1,4 +1,4 @@
-package com.nhnacademy.parking;
+package com.nhnacademy.parking.parkingsystem;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -8,7 +8,9 @@ import com.nhnacademy.parking.car.Car;
 import com.nhnacademy.parking.car.FullSizedCar;
 import com.nhnacademy.parking.exception.CapacityOverflowException;
 import com.nhnacademy.parking.exception.CarSizeOverException;
+import com.nhnacademy.parking.parkingsystem.ParkingSystem;
 import com.nhnacademy.parking.policy.FeePolicy2;
+import com.nhnacademy.parking.user.User;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

@@ -1,7 +1,7 @@
 package com.nhnacademy.parking.car;
 
-import com.nhnacademy.parking.User;
-import com.nhnacademy.parking.Voucher;
+import com.nhnacademy.parking.user.User;
+import com.nhnacademy.parking.user.Voucher;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -24,6 +24,8 @@ public class Car {
     }
 
     public void pay(BigDecimal fee) {
+        System.out.println(this.getUserId() + "님 입차 시간: " + this.enterTime);
+        System.out.println(this.getUserId() + "님 출차 시간: " + LocalDateTime.now());
         user.pay(fee);
     }
 

@@ -1,9 +1,8 @@
 package com.nhnacademy.parking.policy;
 
-import static java.time.temporal.ChronoUnit.DAYS;
 import static java.time.temporal.ChronoUnit.MINUTES;
 
-import com.nhnacademy.parking.Voucher;
+import com.nhnacademy.parking.user.Voucher;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -28,10 +27,10 @@ public class FeePolicy1 implements FeePolicy {
         }
 
         // 주차 시간이 하루가 넘을 시 며칠간 주차 했는지 계산
-        betweenMin = MINUTES.between(enterTime.plusDays(1).with(LocalTime.MIN), exitTime);
-        long parkingDays = DAYS.between(enterTime, exitTime);
+        betweenMin = MINUTES.between(exitTime.with(LocalTime.MIN), exitTime);
+        long parkingDays = exitTime.getDayOfMonth() - enterTime.getDayOfMonth();
         long additionalFee = betweenMin % MINUTE_OF_DAY > 200 ? MAX_FEE_OF_DAY
-            : (betweenMin - MINUTE_OF_DAY) / 10 * ADDITIONAL_FEE_PER_10MIN;
+            : ((betweenMin % MINUTE_OF_DAY) / 10 + 1) * ADDITIONAL_FEE_PER_10MIN;
 
         return BigDecimal.valueOf((parkingDays * MAX_FEE_OF_DAY) + additionalFee);
     }

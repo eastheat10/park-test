@@ -6,6 +6,7 @@ import static org.mockito.Mockito.*;
 
 import com.nhnacademy.parking.car.Car;
 import com.nhnacademy.parking.exception.CapacityOverflowException;
+import com.nhnacademy.parking.parkingsystem.ParkingSystem;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -48,7 +49,7 @@ class EntranceTest {
     void park() {
         Car car = mock(Car.class);
 
-        when(ps.park(car)).thenReturn(1);
+        when(ps.park(car)).thenReturn(1L);
 
         assertThat(entrance.park(car)).isNotNull();
         verify(ps, times(1)).park(car);

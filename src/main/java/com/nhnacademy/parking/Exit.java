@@ -1,6 +1,7 @@
 package com.nhnacademy.parking;
 
 import com.nhnacademy.parking.car.Car;
+import com.nhnacademy.parking.parkingsystem.ParkingSystem;
 
 public class Exit {
 
@@ -10,7 +11,7 @@ public class Exit {
         this.parkingSystem = parkingSystem;
     }
 
-    public Car exit(Long id) {
-        return parkingSystem.exit(id);
+    public synchronized Car exit(Long lotCode) {
+        return parkingSystem.exit(lotCode);
     }
 }

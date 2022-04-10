@@ -1,6 +1,6 @@
 package com.nhnacademy.parking.policy;
 
-import com.nhnacademy.parking.Voucher;
+import com.nhnacademy.parking.user.Voucher;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Optional;

@@ -1,4 +1,4 @@
-package com.nhnacademy.parking;
+package com.nhnacademy.parking.user;
 
 import com.nhnacademy.parking.exception.InsufficientCashException;
 import java.math.BigDecimal;
@@ -15,6 +15,9 @@ public class User {
     }
 
     public void pay(BigDecimal fee) {
+
+        System.out.println(this.id + "님 결제금액: " + fee);
+
         if (this.money.compareTo(fee) < 0) {
             throw new InsufficientCashException();
         }

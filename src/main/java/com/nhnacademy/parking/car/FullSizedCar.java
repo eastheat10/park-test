@@ -1,6 +1,6 @@
 package com.nhnacademy.parking.car;
 
-import com.nhnacademy.parking.User;
+import com.nhnacademy.parking.user.User;
 import java.time.LocalDateTime;
 
 public class FullSizedCar extends Car {

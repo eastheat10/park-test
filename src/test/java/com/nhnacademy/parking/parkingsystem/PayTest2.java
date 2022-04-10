@@ -1,4 +1,4 @@
-package com.nhnacademy.parking;
+package com.nhnacademy.parking.parkingsystem;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -6,8 +6,11 @@ import static org.mockito.Mockito.mock;
 
 import com.nhnacademy.parking.car.Car;
 import com.nhnacademy.parking.exception.InsufficientCashException;
+import com.nhnacademy.parking.parkingsystem.ParkingSystem;
 import com.nhnacademy.parking.policy.FeePolicy;
 import com.nhnacademy.parking.policy.FeePolicy2;
+import com.nhnacademy.parking.user.User;
+import com.nhnacademy.parking.user.Voucher;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Optional;
