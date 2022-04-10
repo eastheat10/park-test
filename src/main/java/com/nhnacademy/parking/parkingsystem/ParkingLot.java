@@ -5,27 +5,30 @@ import com.nhnacademy.parking.car.FullSizedCar;
 import com.nhnacademy.parking.exception.CapacityOverflowException;
 import com.nhnacademy.parking.exception.CarSizeOverException;
 import com.nhnacademy.parking.exception.NonExistentCarException;
-import java.util.HashMap;
+import java.security.SecureRandom;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ParkingLot {
 
     private final static int MAX_PARKING_AREA = 10;
 
-    private final Map<Long, Car> parkingLot;
-    private final Set<Long> areaNumber;
+    private final Map<String, Car> parkingLot;
+    private final Set<String> areaNumber;
+
+    private static ParkingLot parkingLotClass;
 
     public ParkingLot() {
-        this.parkingLot = new HashMap<>();
+        this.parkingLot = new ConcurrentHashMap<>();
         this.areaNumber = new HashSet<>();
-        for (int i = 0; i < MAX_PARKING_AREA; i++) {
-            areaNumber.add((long) i + 1);
+        while (areaNumber.size() < MAX_PARKING_AREA){
+            areaNumber.add("A-" + (new SecureRandom().nextInt(99) + 1));
         }
     }
 
-    public Long park(Car car) {
+    public synchronized String park(Car car) {
         if (MAX_PARKING_AREA <= parkingLot.size()) {
             throw new CapacityOverflowException();
         }
@@ -34,9 +37,10 @@ public class ParkingLot {
             throw new CarSizeOverException();
         }
 
-        Long lotCode = areaNumber.stream()
-                                .findAny()
-                                .orElseThrow(CapacityOverflowException::new);
+        String lotCode = areaNumber.parallelStream()
+                                 .filter(lot -> parkingLot.get(lot) == null)
+                                 .findFirst()
+                                 .orElseThrow(CapacityOverflowException::new);
 
         areaNumber.remove(lotCode);
         parkingLot.put(lotCode, car);
@@ -44,7 +48,7 @@ public class ParkingLot {
         return lotCode;
     }
 
-    public Car exit(Long lotCode) {
+    public synchronized Car exit(String lotCode) {
         Car parkedCar = parkingLot.get(lotCode);
 
         if (parkedCar == null) {
@@ -52,6 +56,14 @@ public class ParkingLot {
         }
 
         return parkedCar;
+    }
+
+    public static ParkingLot getParkingLot() {
+        if (parkingLotClass == null) {
+            parkingLotClass = new ParkingLot();
+        }
+
+        return parkingLotClass;
     }
 
 }

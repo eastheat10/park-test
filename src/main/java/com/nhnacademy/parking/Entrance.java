@@ -11,11 +11,11 @@ public class Entrance {
         this.parkingSystem = parkingSystem;
     }
 
-    public synchronized boolean scan(Car car) {
+    public boolean scan(Car car) {
         return car.getNumber() != null;
     }
 
-    public synchronized Long park(Car car) {
+    public synchronized String park(Car car) {
         return parkingSystem.park(car);
     }
 }

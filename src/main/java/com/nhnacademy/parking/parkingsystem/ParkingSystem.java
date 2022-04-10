@@ -19,11 +19,11 @@ public class ParkingSystem {
     public ParkingSystem(FeePolicy feePolicy) {
         server = new PaycoServer();
         this.feePolicy = feePolicy;
-        parkingLot = new ParkingLot();
+        parkingLot = ParkingLot.getParkingLot();
     }
 
-    public Long park(Car car) {
-        Long lotCode = null;
+    public String park(Car car) {
+        String lotCode = null;
 
         try {
             lotCode = parkingLot.park(car);
@@ -34,7 +34,7 @@ public class ParkingSystem {
         return lotCode;
     }
 
-    public Car exit(Long lotCode) {
+    public Car exit(String lotCode) {
 
         Car exitCar = parkingLot.exit(lotCode);
 

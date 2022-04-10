@@ -17,7 +17,7 @@ public class Simulation extends Thread {
     @Override
     public void run() {
         entrance.scan(car);
-        Long lotCode = entrance.park(car);
+        String lotCode = entrance.park(car);
 
         System.out.println(car.getUserId() + "님 주차완료, 주차구역: " + lotCode);
 

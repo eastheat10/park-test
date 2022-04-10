@@ -49,7 +49,7 @@ class EntranceTest {
     void park() {
         Car car = mock(Car.class);
 
-        when(ps.park(car)).thenReturn(1L);
+        when(ps.park(car)).thenReturn("A - 1");
 
         assertThat(entrance.park(car)).isNotNull();
         verify(ps, times(1)).park(car);

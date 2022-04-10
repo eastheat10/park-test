@@ -20,7 +20,7 @@ public class Main {
 
         for (int i = 0; i < ENTRANCE_NUMBER; i++) {
             SecureRandom random = new SecureRandom();
-            ParkingSystem parkingSystem = new ParkingSystem(new FeePolicy2());
+            ParkingSystem ps = new ParkingSystem(new FeePolicy2());
 
             Long id = (long) (random.nextInt(9000) + 1000);
             BigDecimal money = BigDecimal.valueOf(random.nextInt(100_000));
@@ -33,7 +33,7 @@ public class Main {
             user.takeVoucher(new Voucher(random.nextInt(3)));
             Car car = new Car(user, id, enterTime);
 
-            list.add(new Simulation(new Entrance(parkingSystem), new Exit(parkingSystem), car));
+            list.add(new Simulation(new Entrance(ps), new Exit(ps), car));
         }
 
         list.forEach(Simulation::start);

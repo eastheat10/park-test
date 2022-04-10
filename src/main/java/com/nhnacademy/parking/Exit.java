@@ -7,11 +7,11 @@ public class Exit {
 
     private final ParkingSystem parkingSystem;
 
-    public Exit(ParkingSystem parkingSystem) {
-        this.parkingSystem = parkingSystem;
+    public Exit(ParkingSystem ps) {
+        this.parkingSystem = ps;
     }
 
-    public synchronized Car exit(Long lotCode) {
+    public synchronized Car exit(String lotCode) {
         return parkingSystem.exit(lotCode);
     }
 }

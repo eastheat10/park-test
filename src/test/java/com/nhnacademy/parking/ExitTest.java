@@ -24,7 +24,7 @@ class ExitTest {
     @Test
     void exit() {
         Car car = mock(Car.class);
-        Long id = 1L;
+        String id = "A - 1";
 
         when(parkingSystem.exit(id)).thenReturn(car);
 

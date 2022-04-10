@@ -36,7 +36,7 @@ class PayTest2 {
         User user = new User(carNumber, money);
 
         Car parkingCar = new Car(user, carNumber, before30m);
-        Long lotCode = ps.park(parkingCar);
+        String lotCode = ps.park(parkingCar);
 
         assertThat(ps.exit(lotCode)).isEqualTo(parkingCar);
     }
@@ -53,7 +53,7 @@ class PayTest2 {
         User user = new User(carNumber, money);
 
         Car parkingCar = new Car(user, carNumber, before31m);
-        Long lotCode = ps.park(parkingCar);
+        String lotCode = ps.park(parkingCar);
 
         assertThat(ps.exit(lotCode)).isEqualTo(parkingCar);
     }
@@ -69,7 +69,7 @@ class PayTest2 {
         User user = new User(carNumber, money);
 
         Car parkingCar = new Car(user, carNumber, before31m);
-        Long lotCode = ps.park(parkingCar);
+        String lotCode = ps.park(parkingCar);
 
         assertThat(ps.exit(lotCode)).isNull();
     }
@@ -85,7 +85,7 @@ class PayTest2 {
         User user = new User(carNumber, money);
 
         Car parkingCar = new Car(user, carNumber, before61m);
-        Long lotCode = ps.park(parkingCar);
+        String lotCode = ps.park(parkingCar);
 
         assertThat(ps.exit(lotCode)).isEqualTo(parkingCar);
     }
@@ -101,7 +101,7 @@ class PayTest2 {
         User user = new User(carNumber, money);
 
         Car parkingCar = new Car(user, carNumber, before61m);
-        Long lotCode = ps.park(parkingCar);
+        String lotCode = ps.park(parkingCar);
 
         assertThat(ps.exit(lotCode)).isNull();
     }
@@ -117,7 +117,7 @@ class PayTest2 {
         User user = new User(carNumber, money);
 
         Car parkingCar = new Car(user, carNumber, before6h);
-        Long lotCode = ps.park(parkingCar);
+        String lotCode = ps.park(parkingCar);
 
         assertThat(ps.exit(lotCode)).isEqualTo(parkingCar);
     }
@@ -133,7 +133,7 @@ class PayTest2 {
         User user = new User(carNumber, money);
 
         Car parkingCar = new Car(user, carNumber, before6h);
-        Long lotCode = ps.park(parkingCar);
+        String lotCode = ps.park(parkingCar);
 
         assertThat(ps.exit(lotCode)).isNull();
     }
@@ -156,7 +156,7 @@ class PayTest2 {
 
         Car car = new Car(user, id, LocalDateTime.now().minusMinutes(10));
 
-        Long lotCode = ps.park(car);
+        String lotCode = ps.park(car);
         ps.exit(lotCode);
 
         assertThat(car.getMoney()).isEqualTo(money.subtract(expectFee));
@@ -181,8 +181,8 @@ class PayTest2 {
         Car voucherCar = new Car(voucherUser, id + 1, enterTime);
         voucherUser.takeVoucher(new Voucher(2));
 
-        Long lotCode1 = ps.park(car);
-        Long lotCode2 = ps.park(voucherCar);
+        String lotCode1 = ps.park(car);
+        String lotCode2 = ps.park(voucherCar);
 
         ps.exit(lotCode1);
         ps.exit(lotCode2);
@@ -203,7 +203,7 @@ class PayTest2 {
         Car voucherCar = new Car(voucherUser, id, enterTime);
         voucherUser.takeVoucher(new Voucher(1));
 
-        Long lotCode = ps.park(voucherCar);
+        String lotCode = ps.park(voucherCar);
 
         ps.exit(lotCode);
 
