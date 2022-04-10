@@ -1,12 +1,9 @@
 package com.nhnacademy.parking.parkingsystem;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
 
 import com.nhnacademy.parking.car.Car;
-import com.nhnacademy.parking.exception.InsufficientCashException;
-import com.nhnacademy.parking.parkingsystem.ParkingSystem;
 import com.nhnacademy.parking.policy.FeePolicy1;
 import com.nhnacademy.parking.user.User;
 import java.math.BigDecimal;
@@ -37,9 +34,9 @@ class PayTest1 {
         User user = new User(carNumber, money);
 
         Car parkingCar = new Car(user, carNumber, before30m);
-        ps.park(parkingCar);
+        Long lotCode = ps.park(parkingCar);
 
-        assertThat(ps.exit(carNumber)).isEqualTo(parkingCar);
+        assertThat(ps.exit(lotCode)).isEqualTo(parkingCar);
     }
 
     @DisplayName("차가 나가면 결제실패 - 30분 주차, 차주 999원 소지")
@@ -54,10 +51,10 @@ class PayTest1 {
         User user = new User(carNumber, money);
 
         Car parkingCar = new Car(user, carNumber, before30m);
-        ps.park(parkingCar);
+        Long lotCode = ps.park(parkingCar);
 
-        assertThatThrownBy(() -> ps.exit(carNumber))
-            .isInstanceOf(InsufficientCashException.class);
+        assertThat(ps.exit(lotCode))
+            .isNull();
     }
 
     @DisplayName("차가 나가면 결제 - 31분 주차, 차주 1,500원 소지")
@@ -71,9 +68,9 @@ class PayTest1 {
         User user = new User(carNumber, money);
 
         Car parkingCar = new Car(user, carNumber, before31m);
-        ps.park(parkingCar);
+        Long lotCode = ps.park(parkingCar);
 
-        assertThat(ps.exit(carNumber)).isEqualTo(parkingCar);
+        assertThat(ps.exit(lotCode)).isEqualTo(parkingCar);
     }
 
     @DisplayName("차가 나가면 결제실패 - 31분 주차, 차주 1,499원 소지")
@@ -87,10 +84,9 @@ class PayTest1 {
         User user = new User(carNumber, money);
 
         Car parkingCar = new Car(user, carNumber, before31m);
-        ps.park(parkingCar);
+        Long lotCode = ps.park(parkingCar);
 
-        assertThatThrownBy(() -> ps.exit(carNumber))
-            .isInstanceOf(InsufficientCashException.class);
+        assertThat(ps.exit(lotCode)).isNull();
     }
 
     @DisplayName("차가 나가면 결제 - 61분 주차, 차주 3,000원 소지")
@@ -104,9 +100,9 @@ class PayTest1 {
         User user = new User(carNumber, money);
 
         Car parkingCar = new Car(user, carNumber, before61m);
-        ps.park(parkingCar);
+        Long lotCode = ps.park(parkingCar);
 
-        assertThat(ps.exit(carNumber)).isEqualTo(parkingCar);
+        assertThat(ps.exit(lotCode)).isEqualTo(parkingCar);
     }
 
     @DisplayName("차가 나가면 결제실패 - 61분 주차, 차주 2,999원 소지")
@@ -120,10 +116,10 @@ class PayTest1 {
         User user = new User(carNumber, money);
 
         Car parkingCar = new Car(user, carNumber, before61m);
-        ps.park(parkingCar);
+        Long lotCode = ps.park(parkingCar);
 
-        assertThatThrownBy(() -> ps.exit(carNumber))
-            .isInstanceOf(InsufficientCashException.class);
+        assertThat(ps.exit(lotCode)).isNull();
+
     }
 
     @DisplayName("차가 나가면 결제 - 6시간 주차, 차주 10,000원 소지")
@@ -137,9 +133,9 @@ class PayTest1 {
         User user = new User(carNumber, money);
 
         Car parkingCar = new Car(user, carNumber, before6h);
-        ps.park(parkingCar);
+        Long lotCode = ps.park(parkingCar);
 
-        assertThat(ps.exit(carNumber)).isEqualTo(parkingCar);
+        assertThat(ps.exit(lotCode)).isEqualTo(parkingCar);
     }
 
     @DisplayName("차가 나가면 결제실패 - 6시간 주차, 차주 9,999원 소지")
@@ -153,10 +149,9 @@ class PayTest1 {
         User user = new User(carNumber, money);
 
         Car parkingCar = new Car(user, carNumber, before6h);
-        ps.park(parkingCar);
+        Long lotCode = ps.park(parkingCar);
 
-        assertThatThrownBy(() -> ps.exit(carNumber))
-            .isInstanceOf(InsufficientCashException.class);
+        assertThat(ps.exit(lotCode)).isNull();
     }
 
 }

@@ -4,10 +4,8 @@ import static org.assertj.core.api.Assertions.*;
 
 import com.nhnacademy.parking.policy.FeePolicy;
 import com.nhnacademy.parking.policy.FeePolicy2;
-import com.nhnacademy.parking.user.Voucher;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,10 +26,10 @@ class VoucherTest {
         LocalDateTime exitTime = enterTime.plusHours(3);
         LocalDateTime discountTime = enterTime.plusHours(1);
 
-        Optional<Voucher> voucher = Optional.of(new Voucher(2));
+        Voucher voucher = new Voucher(2);
 
-        BigDecimal threeHourWithVoucher = policy.calculateFee(enterTime, exitTime, voucher);
-        BigDecimal oneHourFee = policy.calculateFee(enterTime, discountTime, Optional.empty());
+        BigDecimal threeHourWithVoucher = policy.calculateFee(enterTime, exitTime, voucher.getDiscountTime());
+        BigDecimal oneHourFee = policy.calculateFee(enterTime, discountTime, 0);
 
         assertThat(threeHourWithVoucher).isEqualTo(oneHourFee);
     }
@@ -42,9 +40,9 @@ class VoucherTest {
         LocalDateTime enterTime = LocalDateTime.now();
         LocalDateTime exitTime = enterTime.plusMinutes(59);
 
-        Optional<Voucher> voucher = Optional.of(new Voucher(1));
+        Voucher voucher = new Voucher(1);
 
-        BigDecimal fee = policy.calculateFee(enterTime, exitTime, voucher);
+        BigDecimal fee = policy.calculateFee(enterTime, exitTime, voucher.getDiscountTime());
 
         assertThat(fee).isEqualTo(BigDecimal.ZERO);
     }

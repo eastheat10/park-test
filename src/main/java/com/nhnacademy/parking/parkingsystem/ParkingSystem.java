@@ -1,11 +1,12 @@
 package com.nhnacademy.parking.parkingsystem;
 
-import com.nhnacademy.parking.exception.InsufficientCashException;
-import com.nhnacademy.parking.user.PaycoServer;
-import com.nhnacademy.parking.user.User;
 import com.nhnacademy.parking.car.Car;
 import com.nhnacademy.parking.exception.CapacityOverflowException;
+import com.nhnacademy.parking.exception.InsufficientCashException;
 import com.nhnacademy.parking.policy.FeePolicy;
+import com.nhnacademy.parking.user.PaycoServer;
+import com.nhnacademy.parking.user.User;
+import com.nhnacademy.parking.user.Voucher;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -38,7 +39,9 @@ public class ParkingSystem {
         Car exitCar = parkingLot.exit(lotCode);
 
         BigDecimal fee = feePolicy.calculateFee(
-            exitCar.getEnterTime(), LocalDateTime.now(), exitCar.getVoucher());
+            exitCar.getEnterTime(), LocalDateTime.now(), exitCar.getVoucher()
+                                                                .map(Voucher::getDiscountTime)
+                                                                .orElse(0L));
 
         if (server.isExist(exitCar.getUserId())) {
             fee = fee.multiply(BigDecimal.valueOf(0.9));
@@ -52,7 +55,6 @@ public class ParkingSystem {
         }
         return exitCar;
     }
-
 
 
     public void addUserToServer(User user) {

@@ -2,11 +2,9 @@ package com.nhnacademy.parking.policy;
 
 import static java.time.temporal.ChronoUnit.MINUTES;
 
-import com.nhnacademy.parking.user.Voucher;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Optional;
 
 public class FeePolicy2 implements FeePolicy {
 
@@ -15,10 +13,11 @@ public class FeePolicy2 implements FeePolicy {
     private final static long ADDITIONAL_FEE_PER_10MIN = 500L;
 
     @Override
-    public BigDecimal calculateFee(LocalDateTime enterTime, LocalDateTime exitTime,
-                                   Optional<Voucher> voucher) {
-
-        exitTime = applyVoucher(voucher.map(Voucher::getDiscountTime).orElse(0L), exitTime);
+    public BigDecimal calculateFee(LocalDateTime enterTime, LocalDateTime exitTime, long voucher) {
+        if (voucher > 0) {
+            System.out.println(voucher + "시간권을 사용합니다.");
+            exitTime = exitTime.minusHours(voucher);
+        }
 
         long betweenMin = MINUTES.between(enterTime, exitTime);
 
@@ -44,13 +43,6 @@ public class FeePolicy2 implements FeePolicy {
             : ((betweenMin % MINUTE_OF_DAY) / 10 + 1) * ADDITIONAL_FEE_PER_10MIN;
 
         return BigDecimal.valueOf((parkingDays * MAX_FEE_OF_DAY) + additionalFee);
-    }
-
-    private LocalDateTime applyVoucher(long voucher, LocalDateTime exitTime) {
-        if (voucher > 0) {
-            System.out.println(voucher + "시간권을 사용합니다.");
-        }
-        return exitTime.minusHours(voucher);
     }
 
 }

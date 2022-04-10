@@ -1,13 +1,11 @@
 package com.nhnacademy.parking;
 
 import com.nhnacademy.parking.car.Car;
-import com.nhnacademy.parking.parkingsystem.ParkingLot;
 import com.nhnacademy.parking.parkingsystem.ParkingSystem;
 import com.nhnacademy.parking.policy.FeePolicy2;
 import com.nhnacademy.parking.user.User;
 import com.nhnacademy.parking.user.Voucher;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.ArrayList;

@@ -16,7 +16,7 @@ public class User {
 
     public void pay(BigDecimal fee) {
 
-        System.out.println(this.id + "님 결제금액: " + fee);
+        System.out.println(this.id + "님 결제금액: " + fee + "₩");
 
         if (this.money.compareTo(fee) < 0) {
             throw new InsufficientCashException();

@@ -8,7 +8,6 @@ import com.nhnacademy.parking.car.Car;
 import com.nhnacademy.parking.car.FullSizedCar;
 import com.nhnacademy.parking.exception.CapacityOverflowException;
 import com.nhnacademy.parking.exception.CarSizeOverException;
-import com.nhnacademy.parking.parkingsystem.ParkingSystem;
 import com.nhnacademy.parking.policy.FeePolicy2;
 import com.nhnacademy.parking.user.User;
 import java.time.LocalDateTime;
@@ -38,11 +37,13 @@ class ParkingTest {
     @Test
     void park_fail() {
 
+        ParkingLot parkingLot = new ParkingLot();
+
         for (int i = 0; i < 10; i++) {
-            ps.park(car);
+            parkingLot.park(car);
         }
 
-        assertThatThrownBy(() -> ps.park(car))
+        assertThatThrownBy(() -> parkingLot.park(car))
             .isInstanceOf(CapacityOverflowException.class);
     }
 
